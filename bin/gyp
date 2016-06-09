@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+const gyp = require('../');
+
+process.exit(gyp.run(process.argv.slice(2)));

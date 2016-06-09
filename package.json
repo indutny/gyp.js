@@ -1,0 +1,18 @@
+{
+  "name": "gyp.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/gyp.js",
+  "scripts": {
+    "test": "mocha --reporter=spec test/*-test.js"
+  },
+  "keywords": [],
+  "author": "Fedor Indutny <fedor@indutny.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  },
+  "dependencies": {
+    "yargs-parser": "^2.4.0"
+  }
+}
