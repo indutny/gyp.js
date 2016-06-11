@@ -42,5 +42,12 @@ describe('gyp.py.parseCondition', () => {
       left: { type: 'Identifier', name: 'a' },
       right: { type: 'Identifier', name: 'b' }
     });
+
+    assert.deepEqual(parseCondition('a >= b'), {
+      type: 'Binary',
+      op: '>=',
+      left: { type: 'Identifier', name: 'a' },
+      right: { type: 'Identifier', name: 'b' }
+    });
   });
 });

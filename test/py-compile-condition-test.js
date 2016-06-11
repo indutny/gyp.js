@@ -58,11 +58,13 @@ describe('gyp.py.compileCondition', () => {
     it('should eval "and"', () => {
       assert.deepEqual(run('1 and 2'), 2);
       assert.deepEqual(run('0 and 1'), 0);
+      assert.deepEqual(run('0 and unknown'), 0);
     });
 
     it('should eval "or"', () => {
       assert.deepEqual(run('1 or 2'), 1);
       assert.deepEqual(run('0 or 2'), 2);
+      assert.deepEqual(run('1 or unknown'), 1);
     });
   });
 });

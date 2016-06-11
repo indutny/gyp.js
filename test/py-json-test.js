@@ -43,6 +43,10 @@ describe('gyp.py.parseJSON', () => {
                    'abc\r\n\f\v\b\tabc');
     });
 
+    it('should parse double single-quote string', () => {
+      assert.equal(parseJSON('\'abc\' \'def\''), 'abcdef');
+    });
+
     it('should validate string', () => {
       assert.throws(() => parseJSON('"abc\nabc"'));
     });
