@@ -35,19 +35,42 @@ describe('gyp.py.parseCondition', () => {
     });
   });
 
-  it('should parse operator', () => {
-    assert.deepEqual(parseCondition('a and b'), {
-      type: 'Binary',
-      op: 'and',
-      left: { type: 'Identifier', name: 'a' },
-      right: { type: 'Identifier', name: 'b' }
+  describe('operator', () => {
+    it('should parse `and`', () => {
+      assert.deepEqual(parseCondition('a and b'), {
+        type: 'Binary',
+        op: 'and',
+        left: { type: 'Identifier', name: 'a' },
+        right: { type: 'Identifier', name: 'b' }
+      });
     });
 
-    assert.deepEqual(parseCondition('a >= b'), {
-      type: 'Binary',
-      op: '>=',
-      left: { type: 'Identifier', name: 'a' },
-      right: { type: 'Identifier', name: 'b' }
+    it('should parse `>=`', () => {
+      assert.deepEqual(parseCondition('a >= b'), {
+        type: 'Binary',
+        op: '>=',
+        left: { type: 'Identifier', name: 'a' },
+        right: { type: 'Identifier', name: 'b' }
+      });
+    });
+
+    it('should parse nested', () => {
+      assert.deepEqual(parseCondition('a == "1" and b >= 1'), {
+        type: 'Binary',
+        op: 'and',
+        left: {
+          type: 'Binary',
+          op: '==',
+          left: { type: 'Identifier', name: 'a' },
+          right: { type: 'Literal', value: '1' }
+        },
+        right: {
+          type: 'Binary',
+          op: '>=',
+          left: { type: 'Identifier', name: 'b' },
+          right: { type: 'Literal', value: 1 }
+        }
+      });
     });
   });
 });
