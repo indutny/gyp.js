@@ -30,7 +30,7 @@ describe('gyp.py.compileCondition', () => {
 
   describe('unary', () => {
     it('should eval `.split()`', () => {
-      assert.deepEqual(run('"1 2 3".split()'), [ '1', '2', '3' ]);
+      assert.deepEqual(run('"1 2 3" . split ( )'), [ '1', '2', '3' ]);
     });
   });
 
