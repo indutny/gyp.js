@@ -44,6 +44,14 @@ describe('gyp.py.parseCondition', () => {
       });
     });
 
+    it('should parse `.split()`', () => {
+      assert.deepEqual(parseCondition('a.split()'), {
+        type: 'Unary',
+        op: 'split',
+        argument: { type: 'Identifier', name: 'a' }
+      });
+    });
+
     it('should parse double `not`', () => {
       assert.deepEqual(parseCondition('not not a'), {
         type: 'Unary',

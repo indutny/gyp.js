@@ -28,6 +28,12 @@ describe('gyp.py.compileCondition', () => {
     assert.deepEqual(run('[ a ]', { a: 123 }), [ 123 ]);
   });
 
+  describe('unary', () => {
+    it('should eval `.split()`', () => {
+      assert.deepEqual(run('"1 2 3".split()'), [ '1', '2', '3' ]);
+    });
+  });
+
   describe('binary', () => {
     it('should eval ==', () => {
       assert.deepEqual(run('12 == 12'), true);
