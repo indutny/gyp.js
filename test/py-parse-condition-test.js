@@ -35,7 +35,46 @@ describe('gyp.py.parseCondition', () => {
     });
   });
 
-  describe('operator', () => {
+  describe('unary', () => {
+    it('should parse single `not`', () => {
+      assert.deepEqual(parseCondition('not a'), {
+        type: 'Unary',
+        op: 'not',
+        argument: { type: 'Identifier', name: 'a' }
+      });
+    });
+
+    it('should parse double `not`', () => {
+      assert.deepEqual(parseCondition('not not a'), {
+        type: 'Unary',
+        op: 'not',
+        argument: {
+          type: 'Unary',
+          op: 'not',
+          argument: { type: 'Identifier', name: 'a' }
+        }
+      });
+    });
+
+    it('should parse `not` in expression', () => {
+      assert.deepEqual(parseCondition('not a and not b'), {
+        type: 'Binary',
+        op: 'and',
+        left: {
+          type: 'Unary',
+          op: 'not',
+          argument: { type: 'Identifier', name: 'a' }
+        },
+        right: {
+          type: 'Unary',
+          op: 'not',
+          argument: { type: 'Identifier', name: 'b' }
+        }
+      });
+    });
+  });
+
+  describe('binary', () => {
     it('should parse `and`', () => {
       assert.deepEqual(parseCondition('a and b'), {
         type: 'Binary',
