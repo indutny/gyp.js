@@ -39,6 +39,30 @@ describe('gyp.py.compileCondition', () => {
       assert.deepEqual(run('12 != 13'), true);
     });
 
+    it('should eval >=', () => {
+      assert.deepEqual(run('12 >= 12'), true);
+      assert.deepEqual(run('13 >= 12'), true);
+      assert.deepEqual(run('11 >= 12'), false);
+    });
+
+    it('should eval <=', () => {
+      assert.deepEqual(run('12 <= 12'), true);
+      assert.deepEqual(run('13 <= 12'), false);
+      assert.deepEqual(run('11 <= 12'), true);
+    });
+
+    it('should eval >', () => {
+      assert.deepEqual(run('12 > 12'), false);
+      assert.deepEqual(run('13 > 12'), true);
+      assert.deepEqual(run('11 > 12'), false);
+    });
+
+    it('should eval <', () => {
+      assert.deepEqual(run('12 < 12'), false);
+      assert.deepEqual(run('13 < 12'), false);
+      assert.deepEqual(run('11 < 12'), true);
+    });
+
     it('should eval "in"', () => {
       assert.deepEqual(run('1 in [1,2,3]'), true);
       assert.deepEqual(run('4 in [1,2,3]'), false);
