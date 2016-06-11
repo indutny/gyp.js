@@ -1,4 +1,6 @@
 #!/usr/bin/env node
 const gyp = require('../');
 
+// TEMPORARY MEASURE
+process.stdout._handle.setBlocking(true);
 process.exit(gyp.main(process.argv.slice(1)));
