@@ -32,6 +32,7 @@ Kind-of working:
 TODO:
 
 * Verify `ninja` on FreeBSD, other Unixes
+* `shared_library` support
 * Windows support
 * Standalone Node-less version with [duktape][1]
 * More operators in reduced Python interpreter
