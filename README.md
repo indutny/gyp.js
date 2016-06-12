@@ -1,7 +1,7 @@
 # gyp.js
 [![NPM version](https://badge.fury.io/js/gyp.js.svg)](http://badge.fury.io/js/gyp.js)
 
-**Work-in-progress**
+**Work-in-progress, please take a look at [issues][2]**
 
 A **feature-reduce** port of [GYP][0] to JavaScript (Node.js).
 
@@ -103,3 +103,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [0]: https://gyp.gsrc.io/
 [1]: https://github.com/svaarala/duktape
+[2]: https://github.com/indutny/gyp.js/issues
