@@ -2,6 +2,9 @@
   "name": "gyp.js",
   "version": "1.0.0",
   "description": "",
+  "bin": {
+    "gyp": "bin/gyp"
+  },
   "main": "lib/gyp.js",
   "scripts": {
     "test": "mocha --reporter=spec test/*-test.js"
