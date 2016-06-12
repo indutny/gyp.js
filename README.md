@@ -1,7 +1,7 @@
 # gyp.js
 [![NPM version](https://badge.fury.io/js/gyp.js.svg)](http://badge.fury.io/js/gyp.js)
 
-**Work-in-progress*/
+**Work-in-progress**
 
 A **feature-reduce** port of [GYP][0] to JavaScript (Node.js).
 
