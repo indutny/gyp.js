@@ -47,6 +47,10 @@ describe('gyp.py.parseJSON', () => {
       assert.equal(parseJSON('\'abc\' \'def\''), 'abcdef');
     });
 
+    it('should parse escaped windows newline in string', () => {
+      assert.equal(parseJSON('\'abc\\\r\ndef\''), 'abc\r\ndef');
+    });
+
     it('should validate string', () => {
       assert.throws(() => parseJSON('"abc\nabc"'));
     });
