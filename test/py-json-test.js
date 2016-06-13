@@ -92,5 +92,9 @@ describe('gyp.py.parseJSON', () => {
     it('should ignore comments', () => {
       assert.deepEqual(parseJSON('# comment\n123'), 123);
     });
+
+    it('should ignore window-style comments', () => {
+      assert.deepEqual(parseJSON('# comment\r\n123'), 123);
+    });
   });
 });
