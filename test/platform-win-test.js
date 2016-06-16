@@ -18,8 +18,8 @@ describe('gyp.platform.win', () => {
 
     it('should append suffix `.lib`', () => {
       assert.deepEqual(
-        win.adjustLibraries(['-llib1', 'lib2.lib']),
-        ['lib1.lib', 'lib2.lib']);
+        win.adjustLibraries(['-llib1', 'lib2.lib', 'lib3.Lib']),
+        ['lib1.lib', 'lib2.lib', 'lib3.Lib']);
     });
 
     it('should remove prefix `-l` and append suffix `.lib`', () => {
