@@ -17,7 +17,7 @@ describe('gyp.generator.ninja.writer', () => {
 
     it('should escape ` `', () => {
       assert.equal(nwriter.escape('abc def'), 'abc$ def');
-      assert.equal(nwriter.escape('  xx yy   zz  '), '$ $ xx$ yy$ $ $ zz$ $ ');
+      assert.equal(nwriter.escape(' xx yy   zz  '), '$ xx$ yy$ $ $ zz$ $ ');
     });
 
     it('should escape `$` symbols', () => {

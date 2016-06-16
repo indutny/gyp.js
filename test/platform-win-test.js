@@ -11,20 +11,27 @@ describe('gyp.platform.win', () => {
     });
 
     it('should remove prefix `-l`', () => {
-      assert.deepEqual(win.adjustLibraries(['-llib1.lib', 'lib2.lib']), ['lib1.lib', 'lib2.lib']);
+      assert.deepEqual(
+        win.adjustLibraries(['-llib1.lib', 'lib2.lib']),
+        ['lib1.lib', 'lib2.lib']);
     });
 
     it('should append suffix `.lib`', () => {
-      assert.deepEqual(win.adjustLibraries(['-llib1', 'lib2.lib']), ['lib1.lib', 'lib2.lib']);
+      assert.deepEqual(
+        win.adjustLibraries(['-llib1', 'lib2.lib']),
+        ['lib1.lib', 'lib2.lib']);
     });
 
     it('should remove prefix `-l` and append suffix `.lib`', () => {
-      assert.deepEqual(win.adjustLibraries(['lib1', '-llib2', '-llib3.lib', 'lib4.lib']),
+      assert.deepEqual(
+        win.adjustLibraries(['lib1', '-llib2', '-llib3.lib', 'lib4.lib']),
         ['lib1.lib', 'lib2.lib', 'lib3.lib', 'lib4.lib']);
     });
 
     it('should preserve quotes', () => {
-      assert.deepEqual(win.adjustLibraries(['"some path/lib1"', '-l"lib2"', '-l"lib3.lib"', '"lib4.lib"']),
+      assert.deepEqual(
+        win.adjustLibraries(['"some path/lib1"', '-l"lib2"', 
+                             '-l"lib3.lib"', '"lib4.lib"']),
         ['"some path/lib1.lib"', '"lib2.lib"', '"lib3.lib"', '"lib4.lib"']);
     });
   });
@@ -32,8 +39,10 @@ describe('gyp.platform.win', () => {
   describe('targetFlags', () => {
     it('disable specific warnings', () => {
       const warnings = [1, 2, 3, 4];
-      assert.deepEqual(win.targetFlags({ msvs_disabled_warnings: []}).cflags, []);
-      assert.deepEqual(win.targetFlags({ msvs_disabled_warnings: warnings}).cflags,
+      assert.deepEqual(win.targetFlags(
+        { msvs_disabled_warnings: []}).cflags, []);
+      assert.deepEqual(win.targetFlags(
+        { msvs_disabled_warnings: warnings}).cflags,
         ['/wd1', '/wd2', '/wd3', '/wd4']);
     });
 
@@ -63,7 +72,7 @@ describe('gyp.platform.win', () => {
         DefaultCharIsUnsigned: true,
         TreatWChar_tAsBuiltInType: true,
         EnablePREfast: true,
-        AdditionalOptions: ['/XXX', '/YYY', '/ZZZ', '/MP'], // /MP should be removed
+        AdditionalOptions: ['/XXX', '/YYY', '/MP'], // /MP should be removed
         EnableEnhancedInstructionSet: 5,
         ForcedIncludeFiles: ['file1.h', 'file2.h'],
       };
@@ -92,12 +101,13 @@ describe('gyp.platform.win', () => {
         '/J',
         '/Zc:wchar_t',
         '/analyze',
-        '/XXX', '/YYY', '/ZZZ',
+        '/XXX', '/YYY',
         '/arch:AVX2',
         '/FIfile1.h', '/FIfile2.h',
         '/FS' // always added
       ];
-      assert.deepEqual(win.targetFlags({ msvs_settings: { VCCLCompilerTool: compiler }}).cflags, cflags);
+      assert.deepEqual(win.targetFlags(
+        { msvs_settings: { VCCLCompilerTool: compiler }}).cflags, cflags);
     });
 
     it('librarian', () => {
@@ -113,7 +123,8 @@ describe('gyp.platform.win', () => {
         '/OUT:output.lib',
         '/XXX', '/YYY'
       ];
-      assert.deepEqual(win.targetFlags({ type: 'static_library', msvs_settings: { VCLibrarianTool: librarian }}).ldflags, libflags);
+      assert.deepEqual(win.targetFlags({ type: 'static_library',
+        msvs_settings: { VCLibrarianTool: librarian }}).ldflags, libflags);
     });
 
     it('linker', () => {
@@ -183,7 +194,8 @@ describe('gyp.platform.win', () => {
         'my1.lib', 'my2.lib',
         '/SAFESEH',
       ];
-      assert.deepEqual(win.targetFlags({ msvs_settings: { VCLinkerTool: linker }}).ldflags, ldflags);
+      assert.deepEqual(win.targetFlags(
+        { msvs_settings: { VCLinkerTool: linker }}).ldflags, ldflags);
     });
   });
 });
