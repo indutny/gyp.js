@@ -198,4 +198,18 @@ describe('gyp.platform.win', () => {
         { msvs_settings: { VCLinkerTool: linker }}).ldflags, ldflags);
     });
   });
+
+  describe('escapeDefine', () => {
+    it('should escape %', () => {
+      assert.equal(win.escapeDefine('%'), '"%%"');
+    });
+
+    it('should escape "', () => {
+      assert.equal(win.escapeDefine('"'), '"\\""');
+    });
+
+    it('should escape \\"', () => {
+      assert.equal(win.escapeDefine('\\"'), '"\\\\\\""');
+    });
+  });
 });
