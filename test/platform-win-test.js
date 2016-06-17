@@ -1,4 +1,5 @@
 'use strict';
+/* global describe it */
 
 const assert = require('assert');
 
@@ -12,27 +13,27 @@ describe('gyp.platform.win', () => {
 
     it('should remove prefix `-l`', () => {
       assert.deepEqual(
-        win.adjustLibraries(['-llib1.lib', 'lib2.lib']),
-        ['lib1.lib', 'lib2.lib']);
+        win.adjustLibraries([ '-llib1.lib', 'lib2.lib' ]),
+        [ 'lib1.lib', 'lib2.lib' ]);
     });
 
     it('should append suffix `.lib`', () => {
       assert.deepEqual(
-        win.adjustLibraries(['-llib1', 'lib2.lib', 'lib3.Lib']),
-        ['lib1.lib', 'lib2.lib', 'lib3.Lib']);
+        win.adjustLibraries([ '-llib1', 'lib2.lib', 'lib3.Lib' ]),
+        [ 'lib1.lib', 'lib2.lib', 'lib3.Lib' ]);
     });
 
     it('should remove prefix `-l` and append suffix `.lib`', () => {
       assert.deepEqual(
-        win.adjustLibraries(['lib1', '-llib2', '-llib3.lib', 'lib4.lib']),
-        ['lib1.lib', 'lib2.lib', 'lib3.lib', 'lib4.lib']);
+        win.adjustLibraries([ 'lib1', '-llib2', '-llib3.lib', 'lib4.lib' ]),
+        [ 'lib1.lib', 'lib2.lib', 'lib3.lib', 'lib4.lib' ]);
     });
 
     it('should preserve quotes', () => {
       assert.deepEqual(
-        win.adjustLibraries(['"some path/lib1"', '-l"lib2"', 
-                             '-l"lib3.lib"', '"lib4.lib"']),
-        ['"some path/lib1.lib"', '"lib2.lib"', '"lib3.lib"', '"lib4.lib"']);
+        win.adjustLibraries([ '"some path/lib1"', '-l"lib2"', 
+                             '-l"lib3.lib"', '"lib4.lib"' ]),
+        [ '"some path/lib1.lib"', '"lib2.lib"', '"lib3.lib"', '"lib4.lib"' ]);
     });
   });
 
@@ -40,10 +41,10 @@ describe('gyp.platform.win', () => {
     it('disable specific warnings', () => {
       const warnings = [1, 2, 3, 4];
       assert.deepEqual(win.targetFlags(
-        { msvs_disabled_warnings: []}).cflags, []);
+        { msvs_disabled_warnings: [] }).cflags, []);
       assert.deepEqual(win.targetFlags(
-        { msvs_disabled_warnings: warnings}).cflags,
-        ['/wd1', '/wd2', '/wd3', '/wd4']);
+        { msvs_disabled_warnings: warnings }).cflags,
+        [ '/wd1', '/wd2', '/wd3', '/wd4' ]);
     });
 
     it('compiler', () => {
@@ -72,9 +73,9 @@ describe('gyp.platform.win', () => {
         DefaultCharIsUnsigned: true,
         TreatWChar_tAsBuiltInType: true,
         EnablePREfast: true,
-        AdditionalOptions: ['/XXX', '/YYY', '/MP'], // /MP should be removed
+        AdditionalOptions: [ '/XXX', '/YYY', '/MP' ], // /MP should be removed
         EnableEnhancedInstructionSet: 5,
-        ForcedIncludeFiles: ['file1.h', 'file2.h'],
+        ForcedIncludeFiles: [ 'file1.h', 'file2.h' ]
       };
       const cflags = [
         '/Od',
@@ -115,7 +116,7 @@ describe('gyp.platform.win', () => {
         LinkTimeCodeGeneration: true,
         TargetMachine: 1,
         OutputFile: 'output.lib',
-        AdditionalOptions: ['/XXX', '/YYY']
+        AdditionalOptions: [ '/XXX', '/YYY' ]
       };
       const libflags = [
         '/LTCG',
@@ -131,16 +132,15 @@ describe('gyp.platform.win', () => {
       const linker = {
         GenerateDebugInformation: true,
         TargetMachine: 17,
-        DelayLoadDLLs: ['lib1.dll', 'lib2.dll'],
+        DelayLoadDLLs: [ 'lib1.dll', 'lib2.dll' ],
         TreatLinkerWarningAsErrors: false,
         OutputFile: 'output.dll',
-        GenerateDebugInformation: true,
         ProgramDatabaseFile: 'data.pdb',
         ProfileGuidedDatabase: 'data.pgd',
         GenerateMapFile: true,
         MapFileName: 'data.map',
         MapExports: true,
-        AdditionalOptions: ['/XXX', '/YYY'],
+        AdditionalOptions: [ '/XXX', '/YYY' ],
         MinimumRequiredVersion: 7,
         SubSystem: 2,
         StackReserveSize: 100,
@@ -152,16 +152,16 @@ describe('gyp.platform.win', () => {
         RandomizedBaseAddress: 1,
         DataExecutionPrevention: 2,
         OptimizeReferences: 2,
-        ForceSymbolReferences: ['aa', 'zz'],
+        ForceSymbolReferences: [ 'aa', 'zz' ],
         EnableCOMDATFolding: 2,
         LinkTimeCodeGeneration: 4,
-        IgnoreDefaultLibraryNames: ['xxx.lib'],
+        IgnoreDefaultLibraryNames: [ 'xxx.lib' ],
         ResourceOnlyDLL: true,
         EntryPointSymbol: 'main',
         Profile: true,
         LargeAddressAware: 2,
-        AdditionalDependencies: ['my1.lib', 'my2.lib'],
-        ImageHasSafeExceptionHandlers: true,
+        AdditionalDependencies: [ 'my1.lib', 'my2.lib' ],
+        ImageHasSafeExceptionHandlers: true
       };
       const ldflags = [
         '/DEBUG',
@@ -192,7 +192,7 @@ describe('gyp.platform.win', () => {
         '/PROFILE',
         '/LARGEADDRESSAWARE',
         'my1.lib', 'my2.lib',
-        '/SAFESEH',
+        '/SAFESEH'
       ];
       assert.deepEqual(win.targetFlags(
         { msvs_settings: { VCLinkerTool: linker }}).ldflags, ldflags);

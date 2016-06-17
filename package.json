@@ -7,12 +7,16 @@
   },
   "main": "lib/gyp.js",
   "scripts": {
-    "test": "mocha --reporter=spec test/*-test.js"
+    "lint": "make lint",
+    "format": "make format",
+    "test": "mocha --reporter=spec test/*-test.js && npm run lint"
   },
   "keywords": [],
   "author": "Fedor Indutny <fedor@indutny.com>",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^2.12.0",
+    "jshint": "^2.9.2",
     "mocha": "^2.5.3"
   },
   "dependencies": {

@@ -1,4 +1,5 @@
 'use strict';
+/* global describe it */
 
 const assert = require('assert');
 
@@ -12,26 +13,26 @@ describe('gyp.shlex', () => {
 
   it('should coalesce parts in single quotes', () => {
     assert.deepEqual(shlex.split('a   pre\'b c\'post d'), [
-        'a', 'preb cpost', 'd' ]);
+      'a', 'preb cpost', 'd' ]);
   });
 
   it('should coalesce parts in double quotes', () => {
     assert.deepEqual(shlex.split('a   pre"b c"post d'), [
-        'a', 'preb cpost', 'd' ]);
+      'a', 'preb cpost', 'd' ]);
   });
 
   it('should not escape `\\` in single quotes', () => {
     assert.deepEqual(shlex.split('a   pre\'b\\n c\'post d'), [
-        'a', 'preb\\n cpost', 'd' ]);
+      'a', 'preb\\n cpost', 'd' ]);
   });
 
   it('should escape `\\` in double quotes', () => {
     assert.deepEqual(shlex.split('a   pre\"b\\n c\"post d'), [
-        'a', 'preb\n cpost', 'd' ]);
+      'a', 'preb\n cpost', 'd' ]);
   });
 
   it('should escape `\\"` in double quotes', () => {
     assert.deepEqual(shlex.split('a   pre\"b\\" c\"post d'), [
-        'a', 'preb" cpost', 'd' ]);
+      'a', 'preb" cpost', 'd' ]);
   });
 });
