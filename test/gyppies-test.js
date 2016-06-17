@@ -4,6 +4,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const rimraf = require('rimraf');
 const spawnSync = require('child_process').spawnSync;
 
 const gyp = path.join(__dirname, '..', 'bin', 'gyp');
@@ -14,6 +15,7 @@ const tests = fs.readdirSync(gyppiesDir);
 function build(name) {
   it(`should build ${name}`, () => {
     const folder = path.join(gyppiesDir, name);
+    rimraf.sync(path.join(folder, 'out'));
 
     const stdio = [ null, null, 'inherit' ];
     const spawnOpts = { stdio: stdio, cwd: folder };

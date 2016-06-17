@@ -6,6 +6,8 @@ SRC_FILES+= lib/**/**/**/*.js
 
 SRC_FILES+= bin/gyp
 SRC_FILES+= test/*.js
+SRC_FILES+= test/**/*.js
+SRC_FILES+= test/**/**/*.js
 
 lint:
 	eslint $(SRC_FILES)
