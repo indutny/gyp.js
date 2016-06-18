@@ -4,5 +4,7 @@ before_install:
 env:
   global:
     - NINJA=ninja/ninja
+script:
+  npm test
 node_js:
   - 6
