@@ -3,7 +3,7 @@ before_install:
   - git clone git://github.com/ninja-build/ninja.git && cd ninja && ./configure.py --bootstrap
 env:
   global:
-    - NINJA=./ninja/ninja
+    - NINJA=../../../ninja/ninja
 script:
   npm install && npm test
 node_js:
