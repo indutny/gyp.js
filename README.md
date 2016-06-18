@@ -1,5 +1,6 @@
 # gyp.js
 [![NPM version](https://badge.fury.io/js/gyp.js.svg)](http://badge.fury.io/js/gyp.js)
+[![Build Status](https://secure.travis-ci.org/indutny/gyp.js.png)](http://travis-ci.org/indutny/gyp.js)
 
 **Work-in-progress, please take a look at [issues][2]**
 
@@ -7,7 +8,7 @@ A **feature-reduce** port of [GYP][0] to JavaScript (Node.js).
 
 ## Why?
 
-* [GYP][0] is the only Python dependency of Node.js .
+* [GYP][0] is the only Python dependency of Node.js
 * Python scripts have some contribution barrier for Node.js collaborators
 * No generators other than `ninja` are actually required
 
