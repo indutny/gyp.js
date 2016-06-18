@@ -1,0 +1,8 @@
+language: node_js
+before_install:
+  - git clone git://github.com/ninja-build/ninja.git && cd ninja && ./configure.py --bootstrap
+env:
+  global:
+    - NINJA=ninja/ninja
+node_js:
+  - 6
