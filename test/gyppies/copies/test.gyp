@@ -11,7 +11,7 @@
     "copies": [{
       "destination": "out/",
       "files": [
-        "<(PRODUCT_DIR)/ohai",
+        "<(PRODUCT_DIR)/ohai<(EXECUTABLE_SUFFIX)",
       ],
     }],
   }],
