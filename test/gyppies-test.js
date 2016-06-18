@@ -20,7 +20,7 @@ function build(name) {
     const stdio = [ null, null, 'inherit' ];
     const spawnOpts = { stdio: stdio, cwd: folder };
 
-    let p = spawnSync(gyp, [], spawnOpts);
+    let p = spawnSync(process.execPath, [ gyp ], spawnOpts);
     assert.equal(p.status, 0, `cd ${name} && gyp failed`);
 
     p = spawnSync(ninja, [ '-C', path.join('out', 'Default') ], spawnOpts);
