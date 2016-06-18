@@ -1,9 +1,9 @@
 language: node_js
 before_install:
-  - git clone git://github.com/ninja-build/ninja.git && cd ninja && ./configure.py --bootstrap
+  - git clone git://github.com/ninja-build/ninja.git && cd ninja && ./configure.py --bootstrap && echo `pwd`
 env:
   global:
-    - NINJA=ninja/ninja
+    - NINJA=$HOME/ninja/ninja
 script:
   npm install && npm test
 node_js:
