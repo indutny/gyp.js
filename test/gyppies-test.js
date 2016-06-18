@@ -21,15 +21,21 @@ function build(name) {
     const spawnOpts = { stdio: stdio, cwd: folder };
 
     let p = spawnSync(process.execPath, [ gyp ], spawnOpts);
+    if (p.error)
+      throw p.error;
     assert.equal(p.status, 0, `cd ${name} && gyp failed`);
 
     p = spawnSync(ninja, [ '-C', path.join('out', 'Default') ], spawnOpts);
+    if (p.error)
+      throw p.error;
     assert.equal(p.status, 0, `ninja ${name}`);
 
     // Compiled test
     let test = path.join(folder, 'out/Default/test');
     if (fs.existsSync(test)) {
       p = spawnSync(test, [], spawnOpts);
+      if (p.error)
+        throw p.error;
       assert.equal(p.status, 0, `test ${name}`);
     }
 
