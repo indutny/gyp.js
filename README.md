@@ -27,7 +27,7 @@ Done:
 
 Kind-of working:
 
-* `ninja` generator on Linux, OSX
+* `ninja` generator on Linux, OSX, FreeBSD, Windows (with Visual Studio)
 
 TODO:
 
