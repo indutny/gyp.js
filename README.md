@@ -11,6 +11,8 @@ A **feature-reduce** port of [GYP][0] to JavaScript (Node.js).
 * [GYP][0] is the only Python dependency of Node.js
 * Python scripts have some contribution barrier for Node.js collaborators
 * No generators other than `ninja` are actually required
+* `node-gyp` implicitly depends on Python because of GYP. Porting it to
+  `gyp.js` will remove extra dependency.
 
 ## Installation
 
