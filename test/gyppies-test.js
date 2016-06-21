@@ -1,5 +1,6 @@
 'use strict';
 /* global describe it */
+/* eslint-disable no-console */
 
 const assert = require('assert');
 const fs = require('fs');
@@ -21,11 +22,15 @@ function build(name) {
     const spawnOpts = { stdio: stdio, cwd: folder };
 
     let p = spawnSync(process.execPath, [ gyp ], spawnOpts);
+    if (p.status !== 0 && p.stdout)
+      console.error(p.stdout.toString());
     if (p.error)
       throw p.error;
     assert.equal(p.status, 0, `cd ${name} && gyp failed`);
 
     p = spawnSync(ninja, [ '-C', path.join('out', 'Default') ], spawnOpts);
+    if (p.status !== 0 && p.stdout)
+      console.error(p.stdout.toString());
     if (p.error)
       throw p.error;
     assert.equal(p.status, 0, `ninja ${name}`);
@@ -34,6 +39,8 @@ function build(name) {
     let test = path.join(folder, 'out/Default/test');
     if (fs.existsSync(test)) {
       p = spawnSync(test, [], spawnOpts);
+      if (p.status !== 0 && p.stdout)
+        console.error(p.stdout.toString());
       if (p.error)
         throw p.error;
       assert.equal(p.status, 0, `test ${name}`);
