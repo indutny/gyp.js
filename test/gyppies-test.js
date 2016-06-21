@@ -38,9 +38,12 @@ function build(name) {
     assert.equal(p.status, 0, `ninja ${name}`);
 
     // Compiled test
-    let test = path.join(folder, 'out/Default/test');
+    let test = path.join(folder, 'out', 'Default', 'test');
     if (fs.existsSync(test)) {
-      p = spawnSync(test, [], spawnOpts);
+      p = spawnSync(test, [], {
+        stdio: stdio,
+        cwd: path.join(folder, 'out', 'Default')
+      });
       if (p.status !== 0 && p.stdout)
         console.error(p.stdout.toString());
       if (p.error)
