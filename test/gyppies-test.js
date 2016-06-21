@@ -14,7 +14,7 @@ const gyppiesDir = path.join(__dirname, 'gyppies');
 const tests = fs.readdirSync(gyppiesDir);
 
 function build(name) {
-  it(`should build ${name}`, () => {
+  it(`should build ${name}`, function() {
     this.timeout(15000);
 
     const folder = path.join(gyppiesDir, name);
