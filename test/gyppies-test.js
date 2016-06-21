@@ -15,6 +15,8 @@ const tests = fs.readdirSync(gyppiesDir);
 
 function build(name) {
   it(`should build ${name}`, () => {
+    this.timeout(15000);
+
     const folder = path.join(gyppiesDir, name);
     rimraf.sync(path.join(folder, 'out'));
 
