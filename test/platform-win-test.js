@@ -197,6 +197,18 @@ describe('gyp.platform.win', () => {
       assert.deepEqual(win.targetFlags(
         { msvs_settings: { VCLinkerTool: linker }}).ldflags, ldflags);
     });
+
+    it('assembler', () => {
+      const assembler = {
+        UseSafeExceptionHandlers: 'true'
+      };
+
+      const asmflags = [
+        '/safeseh'
+      ];
+      assert.deepEqual(win.targetFlags(
+        { msvs_settings: { MASM: assembler } }).asmflags, asmflags);
+    });
   });
 
   describe('escapeDefine', () => {
