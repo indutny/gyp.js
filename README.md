@@ -4,7 +4,7 @@
 
 **Work-in-progress, please take a look at [issues][2]**
 
-A **feature-reduce** port of [GYP][0] to JavaScript (Node.js).
+A **feature-reduced** port of [GYP][0] to JavaScript (Node.js).
 
 ## Why?
 
