@@ -17,10 +17,11 @@
   "devDependencies": {
     "eslint": "^2.12.0",
     "mocha": "^2.5.3",
+    "ninja.js": "^1.1.0",
     "rimraf": "^2.5.2"
   },
   "optionalDependencies": {
-    "ninja.js": "^1.0.10"
+    "ninja.js": "^1.1.0"
   },
   "dependencies": {
     "mkdirp": "^0.5.1",
