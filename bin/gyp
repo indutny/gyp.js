@@ -4,4 +4,6 @@ const gyp = require('../');
 // TEMPORARY MEASURE
 process.stdout._handle.setBlocking(true);
 const code = gyp.main(process.argv.slice(1));
+if (code === null)
+  return;
 process.exit(code);

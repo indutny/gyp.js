@@ -19,6 +19,9 @@
     "mocha": "^2.5.3",
     "rimraf": "^2.5.2"
   },
+  "optionalDependencies": {
+    "ninja.js": "^1.0.10"
+  },
   "dependencies": {
     "mkdirp": "^0.5.1",
     "parser-base": "^1.0.0",
