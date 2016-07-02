@@ -708,7 +708,7 @@ NinjaMain.prototype.rulesAndTargets = function rulesAndTargets() {
   main.sectionEnd('targets');
 };
 
-NinjaMain.prototype.defaults = function defaults() {
+NinjaMain.prototype.defaults = function defaults2() {
   const main = this.n;
   const ninjas = this.ninjas;
 
@@ -742,7 +742,7 @@ NinjaMain.prototype.defaults = function defaults() {
   main.finalize();
 };
 
-NinjaMain.prototype.build = function build() {
+NinjaMain.prototype.build = function build2() {
   try {
     // Check that ninja is present
     // NOTE: Windows will attempt to execute `ninja.js`, if won't specify
@@ -772,7 +772,7 @@ NinjaMain.prototype.build = function build() {
     execSync('ninja -C ' + this.configDir, { stdio: 'inherit' });
 };
 
-exports.generateOutput = function generateOutput(targetList, targetDicts, data,
+exports.generateOutput = function generateOutput2(targetList, targetDicts, data,
                                                  params) {
   if (targetList.length === 0)
     throw new Error('No targets to build!');

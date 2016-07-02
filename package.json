@@ -6,16 +6,25 @@
     "gyp": "bin/gyp"
   },
   "main": "lib/gyp.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
+    "build": "make build",
+    "watch": "make build-watch",
     "lint": "make lint",
     "format": "make format",
     "test": "make check && make lint",
-    "coverage": "make coverage"
+    "coverage": "make coverage",
+    "prepublish": "npm run build"
   },
   "keywords": [],
   "author": "Fedor Indutny <fedor@indutny.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-env": "^1.2.2",
+    "babel-register": "^6.9.0",
     "eslint": "^2.12.0",
     "mocha": "^2.5.3",
     "ninja.js": "^1.1.0",
@@ -25,9 +34,21 @@
     "ninja.js": "^1.1.0"
   },
   "dependencies": {
+    "istanbul": "^0.4.5",
     "mkdirp": "^0.5.1",
     "parser-base": "^1.0.0",
-    "yargs-parser": "^2.4.0",
-    "istanbul": "^0.4.5"
+    "yargs-parser": "^2.4.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": 4
+          }
+        }
+      ]
+    ]
   }
 }

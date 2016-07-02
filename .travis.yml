@@ -5,7 +5,7 @@ env:
   global:
     - NINJA=../../../ninja/ninja
 script:
-  npm install && npm test
+  npm install && npm run build && npm test
 node_js:
   - 4
   - 5
