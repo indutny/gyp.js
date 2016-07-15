@@ -23,7 +23,10 @@ function build(name) {
     const stdio = [ null, null, 'inherit' ];
     const spawnOpts = { stdio: stdio, cwd: folder };
 
-    let p = spawnSync(process.execPath, [ gyp ], spawnOpts);
+    const argvFile = path.join(folder, 'argv.json');
+    const argv = fs.existsSync(argvFile) ? require(argvFile) : [];
+
+    let p = spawnSync(process.execPath, [ gyp ].concat(argv), spawnOpts);
     if (p.status !== 0 && p.stdout)
       console.error(p.stdout.toString());
     if (p.error)
