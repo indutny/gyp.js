@@ -10,9 +10,9 @@ SRC_FILES+= test/**/*.js
 SRC_FILES+= test/**/**/*.js
 
 lint:
-	eslint $(SRC_FILES)
+	@node_modules/.bin/eslint $(SRC_FILES)
 
 format:
-	eslint --fix $(SRC_FILES)
+	@node_modules/.bin/eslint --fix $(SRC_FILES)
 
 .PHONY: lint format
