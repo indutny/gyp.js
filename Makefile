@@ -9,15 +9,20 @@ SRC_FILES+= test/*.js
 SRC_FILES+= test/**/*.js
 SRC_FILES+= test/**/**/*.js
 
+BINDIR=./node_modules/.bin
+
 lint:
-	@node_modules/.bin/eslint $(SRC_FILES)
+	@$(BINDIR)/eslint $(SRC_FILES)
 
 format:
-	@node_modules/.bin/eslint --fix $(SRC_FILES)
+	@$(BINDIR)/eslint --fix $(SRC_FILES)
 
 check:
-	@node_modules/.bin/mocha --reporter=spec test/*-test.js
+	@$(BINDIR)/mocha --reporter=spec test/*-test.js
+
+coverage:
+	@$(BINDIR)/istanbul cover --html $(BINDIR)/_mocha -- -u exports -R spec test/*-test.js
 
 test: check
 
-.PHONY: lint format check test
+.PHONY: lint format check test coverage

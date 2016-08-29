@@ -9,7 +9,8 @@
   "scripts": {
     "lint": "make lint",
     "format": "make format",
-    "test": "make check && make lint"
+    "test": "make check && make lint",
+    "coverage": "make coverage"
   },
   "keywords": [],
   "author": "Fedor Indutny <fedor@indutny.com>",
@@ -26,6 +27,7 @@
   "dependencies": {
     "mkdirp": "^0.5.1",
     "parser-base": "^1.0.0",
-    "yargs-parser": "^2.4.0"
+    "yargs-parser": "^2.4.0",
+    "istanbul": "^0.4.5"
   }
 }
