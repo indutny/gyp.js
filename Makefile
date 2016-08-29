@@ -15,4 +15,9 @@ lint:
 format:
 	@node_modules/.bin/eslint --fix $(SRC_FILES)
 
-.PHONY: lint format
+check:
+	@node_modules/.bin/mocha --reporter=spec test/*-test.js
+
+test: check
+
+.PHONY: lint format check test

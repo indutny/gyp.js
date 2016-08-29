@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "make lint",
     "format": "make format",
-    "test": "mocha --reporter=spec test/*-test.js && npm run lint"
+    "test": "make check && make lint"
   },
   "keywords": [],
   "author": "Fedor Indutny <fedor@indutny.com>",
