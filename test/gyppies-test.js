@@ -9,7 +9,13 @@ const rimraf = require('rimraf');
 const ninja = require('ninja.js');
 const spawnSync = require('child_process').spawnSync;
 
-const gyp = path.join(__dirname, '..', 'bin', 'gyp');
+const rootDir = path.join(__dirname, '..');
+const gyp = path.join(rootDir, 'bin', 'gyp');
+const istanbul = path.join(rootDir, 'node_modules', '.bin', 'istanbul');
+const istanbulCoverageDir = path.join(rootDir, 'coverage');
+const istanbulArgs = [ istanbul, 'cover', '--root', rootDir, '--dir',
+                       istanbulCoverageDir, '--report', 'none', '--print',
+                       'none', '--include-pid' ];
 const gyppiesDir = path.join(__dirname, 'gyppies');
 const tests = fs.readdirSync(gyppiesDir);
 
@@ -24,9 +30,12 @@ function build(name) {
     const spawnOpts = { stdio: stdio, cwd: folder };
 
     const argvFile = path.join(folder, 'argv.json');
-    const argv = fs.existsSync(argvFile) ? require(argvFile) : [];
+    let argv = fs.existsSync(argvFile) ? require(argvFile) : [];
+    argv = [ gyp ].concat(argv);
+    if (process.env.running_under_istanbul)
+      argv = istanbulArgs.concat(argv);
 
-    let p = spawnSync(process.execPath, [ gyp ].concat(argv), spawnOpts);
+    let p = spawnSync(process.execPath, argv, spawnOpts);
     if (p.status !== 0 && p.stdout)
       console.error(p.stdout.toString());
     if (p.error)
