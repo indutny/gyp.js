@@ -70,8 +70,8 @@ function calculateVariables(defaultVariables) {
     defaultVariables['STATIC_LIB_SUFFIX'] = '.lib';
     defaultVariables['SHARED_LIB_PREFIX'] = '';
     defaultVariables['SHARED_LIB_SUFFIX'] = '.dll';
-    defaultVariables['MSVS_VERSION'] = gyp.platform.win.getMSVSVersion();
-    defaultVariables['MSVS_OS_BITS'] = gyp.platform.win.getOSBits();
+    defaultVariables['MSVS_VERSION'] = gyp.bindings.win.getMSVSVersion();
+    defaultVariables['MSVS_OS_BITS'] = gyp.bindings.win.getOSBits();
   } else {
     // On Solaris NODE_PLATFORM is `sunos`, while GYP's `OS` variable should be
     // `solaris`
@@ -126,6 +126,9 @@ function Ninja(options) {
   this.objExt = this.flavor === 'win32' ? '.obj' : '.o';
 
   this.bashAnd = this.flavor === 'win32' ? '&' : '&&';
+
+  this.actionNames = options.actionNames;
+  this.targetArch = options.targetArch;
 }
 
 Ninja.prototype.expand = function expand(p, productDir) {
@@ -350,8 +353,8 @@ Ninja.prototype.actionCmd = function actionCmd(base, toBase, cmds) {
   if (this.flavor !== 'win32')
     return res;
 
-  // TODO(indutny): escape quotes in res
-  return `cmd.exe /s /c "${res}"`;
+  const nw = gyp.platform.win.getNinjaWrapper(this.targetArch);
+  return `${nw} cmd.exe /s /c "${res}"`;
 };
 
 Ninja.prototype.copies = function copies() {
@@ -395,7 +398,11 @@ Ninja.prototype.actions = function actions() {
 
   let res = [];
   list.forEach((action) => {
-    const actionRule = action.action_name + '_' + this.index;
+    const safeName = action.action_name.replace(/\s/g, '_');
+    const an = this.actionNames;
+    const counterRef = an[safeName] || (an[safeName] = {cnt: 0});
+    const actionRule = safeName + (counterRef.cnt || '');
+    counterRef.cnt++;
 
     const base = gyp.common.cachedRelative(this.configDir, this.srcDir);
     const toBase = gyp.common.cachedRelative(this.srcDir, this.configDir);
@@ -409,6 +416,12 @@ Ninja.prototype.actions = function actions() {
     const outputs = (action.outputs || []).map(i => this.srcPath(i));
 
     res = res.concat(outputs);
+
+    if (action.process_outputs_as_sources === '1') {
+      let trg = this.targetDict;
+      trg.sources = trg.sources || [];
+      trg.sources = trg.sources.concat(action.outputs);
+    }
 
     this.n.build(actionRule, outputs, inputs, {
       orderOnlyDeps: deps
@@ -673,16 +686,21 @@ NinjaMain.prototype.rulesAndTargets = function rulesAndTargets() {
 
   let useCxx = false;
   const ninjas = this.ninjas;
+  const actionNames = {};
+  const targetArch = this.params['target_arch'];
   const ninjaList = this.targetList.map((target, index) => {
+    const targetDict = this.targetDicts[target].configurations[this.config];
     const ninja = new Ninja({
       index: index,
       outDir: this.outDir,
       configDir: this.configDir,
       topDir: this.topDir,
       target: target,
-      targetDict: this.targetDicts[target].configurations[this.config],
+      targetDict: targetDict,
       ninjas: ninjas,
-      config: this.config
+      config: this.config,
+      actionNames: actionNames,
+      targetArch: targetArch
     });
     ninjas[target] = ninja;
     return ninja;
@@ -695,8 +713,7 @@ NinjaMain.prototype.rulesAndTargets = function rulesAndTargets() {
   });
 
   if (process.platform === 'win32') {
-    gyp.platform.win.ninjaRules(main, this.configDir,
-                                this.options.generator_flags, this.params);
+    gyp.platform.win.ninjaRules(main, this.configDir, this.params);
   } else {
     gyp.platform.unix.ninjaRules(main, useCxx);
   }

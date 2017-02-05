@@ -358,7 +358,8 @@ gyp.main = function main(args, extra) {
     gyp_binary: args[0],
     home_dot_gyp: homeDotGyp,
     root_targets: options.root_targets,
-    target_arch: cmdlineDefaultVariables['target_arch'] || ''
+    target_arch: cmdlineDefaultVariables['target_arch'] ||
+      gyp.bindings.process.arch
   };
 
   // Start with the default variables from the command line.

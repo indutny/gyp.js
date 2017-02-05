@@ -32,6 +32,7 @@ exports.process = {
   env: process.env,
   cwd: () => process.cwd(),
   platform: process.platform,
+  arch: process.arch,
   exit: (code) => process.exit(code)
 };
 
@@ -42,3 +43,17 @@ exports.log = function log(message) {
 exports.error = function error(message) {
   process.stderr.write(message + '\n');
 };
+
+Object.defineProperty(exports, 'win', {
+  get: function get() {
+    // ====== a late require ========
+    const getter = require('windows-autoconf');
+    // We just need all the binding to be set on `exports`
+    getter.setBindings(exports);
+    return {
+      getMSVSVersion: getter.getMSVSVersion,
+      getOSBits: getter.getOSBits,
+      resolveDevEnvironment: getter.resolveDevEnvironment
+    };
+  }
+});

@@ -31,7 +31,7 @@ describe('gyp.platform.win', () => {
 
     it('should preserve quotes', () => {
       assert.deepEqual(
-        win.adjustLibraries([ '"some path/lib1"', '-l"lib2"', 
+        win.adjustLibraries([ '"some path/lib1"', '-l"lib2"',
                              '-l"lib3.lib"', '"lib4.lib"' ]),
         [ '"some path/lib1.lib"', '"lib2.lib"', '"lib3.lib"', '"lib4.lib"' ]);
     });
@@ -175,7 +175,7 @@ describe('gyp.platform.win', () => {
         '/MAPINFO:EXPORTS',
         '/XXX', '/YYY',
         '/SUBSYSTEM:WINDOWS,7',
-        '/STACK100,200',
+        '/STACK:100,200',
         '/TSAWARE:NO',
         '/INCREMENTAL',
         '/BASE:1000',

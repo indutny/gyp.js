@@ -3,27 +3,25 @@
 const gyp = require('../../gyp');
 const fs = gyp.bindings.fs;
 const path = gyp.bindings.path;
-const process = gyp.bindings.process;
 
 const win = exports;
 
-win.ninjaRules = function ninjaRules(n, outDir, generatorFlags, params) {
-  let envFile = win.genEnvironment(
-      outDir,
-      generatorFlags['msvs_version'] || 'auto',
-      params['target_arch'] || 'ia32');
-  if (envFile)
-    envFile = ` -e ${envFile} `;
-  else
-    envFile = '';
+win.getEnvFileName = function getEnvFileName(target_arch) {
+  return `environment.${target_arch}`;
+};
 
-  const ninjaWrap = `ninja -t msvc ${envFile}--`;
+win.getNinjaWrapper = function getNinjaWrapper(target_arch) {
+  const envFile = win.getEnvFileName(target_arch);
+  return `ninja -t msvc -e ${envFile} --`;
+};
 
+win.ninjaRules = function ninjaRules(n, outDir, params) {
+  win.genEnvironment(outDir, params['target_arch']);
+  const nw = this.getNinjaWrapper(params['target_arch']);
   n.rule('cc', {
     deps: 'msvc',
     // TODO(indutny): is /Fd$pdbname_c needed here?
-    command: `${ninjaWrap} $cc /nologo /showIncludes /FC ` +
-             '@$out.rsp /c $in /Fo$out',
+    command: `${nw} $cc /nologo /showIncludes /FC @$out.rsp /c $in /Fo$out`,
     rspfile: '$out.rsp',
     rspfile_content: '$defines $includes $cflags $cflags_c',
     description: 'CC $out'
@@ -32,22 +30,21 @@ win.ninjaRules = function ninjaRules(n, outDir, generatorFlags, params) {
   n.rule('cxx', {
     deps: 'msvc',
     // TODO(indutny): is /Fd$pdbname_c needed here?
-    command: `${ninjaWrap} $cxx /nologo /showIncludes /FC ` +
-             '@$out.rsp /c $in /Fo$out',
+    command: `${nw} $cxx /nologo /showIncludes /FC @$out.rsp /c $in /Fo$out`,
     rspfile: '$out.rsp',
     rspfile_content: '$defines $includes $cflags $cflags_cc',
     description: 'CXX $out'
   });
 
   n.rule('asm', {
-    command: `${ninjaWrap} $asm @$out.rsp /nologo /c /Fo $out $in`,
+    command: `${nw} $asm @$out.rsp /nologo /c /Fo $out $in`,
     rspfile: '$out.rsp',
     rspfile_content: '$defines $includes $asmflags',
     description: 'ASM $out'
   });
 
   n.rule('link', {
-    command: `${ninjaWrap} $ld /nologo /OUT:$out @$out.rsp`,
+    command: `${nw} $ld /nologo /OUT:$out @$out.rsp`,
     rspfile: '$out.rsp',
     rspfile_content: '$in_newline $libs $ldflags',
     pool: 'link_pool',
@@ -55,7 +52,7 @@ win.ninjaRules = function ninjaRules(n, outDir, generatorFlags, params) {
   });
 
   n.rule('alink', {
-    command: `${ninjaWrap} $ar /nologo /ignore:4221 /OUT:$out @$out.rsp`,
+    command: `${nw} $ar /nologo /ignore:4221 /OUT:$out @$out.rsp`,
     rspfile: '$out.rsp',
     rspfile_content: '$in_newline $libs $arflags',
     pool: 'link_pool',
@@ -63,8 +60,7 @@ win.ninjaRules = function ninjaRules(n, outDir, generatorFlags, params) {
   });
 
   n.rule('solink', {
-    command: `${ninjaWrap} $ld /IMPLIB:$out.lib /nologo /DLL /OUT:$out ` +
-             '@$out.rsp',
+    command: `${nw} $ld /IMPLIB:$out.lib /nologo /DLL /OUT:$out @$out.rsp`,
     rspfile: '$out.rsp',
     rspfile_content: '$in_newline $libs $ldflags',
     pool: 'link_pool',
@@ -239,7 +235,7 @@ function linkerFlags(linker) {
     if (stack_reserve_size) {
       let stack_commit_size = linker.StackCommitSize || '';
       if (stack_commit_size) stack_commit_size = ',' + stack_commit_size;
-      ldflags.push('/STACK' + stack_reserve_size + stack_commit_size);
+      ldflags.push('/STACK:' + stack_reserve_size + stack_commit_size);
     }
 
     ld('TerminalServerAware', {
@@ -364,112 +360,13 @@ win.detectVersion = function detectVersion() {
   throw new Error('No known Visual Studio version found, sorry!');
 };
 
-const IMPORTANT_VARS =
-    /^(include|lib|libpath|path|pathext|systemroot|temp|tmp)=(.*)$/i;
+win.genEnvironment = function genEnvironment(outDir, target_arch) {
+  const env = gyp.bindings.win.resolveDevEnvironment(target_arch);
+  const envBlock = Object.keys(env)
+    .map(key => `${key}=${env[key]}`)
+    .join('\0');
 
-function formatEnvBlock(lines) {
-  let res = '';
-  lines.forEach((line) => {
-    const match = line.match(IMPORTANT_VARS);
-    if (match === null)
-      return;
-
-    res += match[1].toUpperCase() + '=' + match[2] + '\0';
-  });
-  return res;
-}
-
-win.getMSVSVersion = function getMSVSVersion(version) {
-  const env = process.env;
-
-  if (!version)
-    version = env['GYP_MSVS_VERSION'] || 'auto';
-
-  // Try to find a MSVS installation
-  if (version === 'auto' && env['VS140COMNTOOLS'] || version === '2015')
-    return '2015';
-  if (version === 'auto' && env['VS120COMNTOOLS'] || version === '2013')
-    return '2013';
-  if (version === 'auto' && env['VS100COMNTOOLS'] || version === '2010')
-    return '2010';
-
-  return 'auto';
-};
-
-win.getOSBits = function getOSBits() {
-  const env = process.env;
-
-  // PROCESSOR_ARCHITEW6432 - is a system arch
-  // PROCESSOR_ARCHITECTURE - is a session arch
-  const hostArch = env['PROCESSOR_ARCHITEW6432'] ||
-                   env['PROCESSOR_ARCHITECTURE'];
-  if (hostArch === 'AMD64')
-    return 64;
-  else
-    return 32;
-};
-
-win.genEnvironment = function genEnvironment(outDir, version, arch) {
-  const env = process.env;
-  let tools;
-
-  // Try to find a MSVS installation
-  if (version === 'auto' && env['VS140COMNTOOLS'] || version === '2015') {
-    version = '2015';
-    tools =  path.join(env.VS140COMNTOOLS, '..', '..');
-  }
-  if (version === 'auto' && env['VS120COMNTOOLS'] || version === '2013') {
-    version = '2013';
-    tools =  path.join(env.VS120COMNTOOLS, '..', '..');
-  }
-  // TODO(indutny): more versions?
-  if (version === 'auto' && env['VS100COMNTOOLS'] || version === '2010') {
-    version = '2010';
-    tools =  path.join(env.VS120COMNTOOLS, '..', '..');
-  }
-  // TODO(indutny): does it work with MSVS Express?
-
-  if (version === 'auto') {
-    gyp.bindings.error('No Visual Studio found. When building - please ' +
-                       'run `ninja` from the MSVS console');
-    return;
-  }
-
-  // NOTE: Largely inspired by MSVSVersion.py
-  const bits = win.getOSBits();
-
-  let vcvars;
-  // TODO(indutny): proper escape for the .bat file
-  if (arch === 'ia32') {
-    if (bits === 64)
-      vcvars = '"' + path.join(tools, 'VC', 'vcvarsall.bat') + '" amd64_x86';
-    else
-      vcvars = '"' + path.join(tools, 'Common7', 'Tools', 'vsvars32.bat') + '"';
-  } else if (arch === 'x64') {
-    let arg;
-    if (bits === 64)
-      arg = 'amd64';
-    else
-      arg = 'x86_amd64';
-    vcvars = '"' + path.join(tools, 'VC', 'vcvarsall.bat') + '" ' + arg;
-  } else {
-    throw new Error(`Arch: '${arch}' is not supported on windows`);
-  }
-
-  let lines;
-  try {
-    lines = gyp.bindings.execSync(`${vcvars} & set`, { env: {} }).toString()
-        .split(/\r\n/g);
-  } catch (e) {
-    gyp.bindings.error(e.message);
-    return;
-  }
-
-  const envBlock = formatEnvBlock(lines);
-  const envFile = 'environment.' + arch;
-
-  fs.writeFileSync(path.join(outDir, envFile),
-                   envBlock);
-
+  const envFile = win.getEnvFileName(target_arch);
+  fs.writeFileSync(path.join(outDir, envFile), envBlock);
   return envFile;
 };

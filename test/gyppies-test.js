@@ -8,6 +8,7 @@ const path = require('path');
 const rimraf = require('rimraf');
 const ninja = require('ninja.js');
 const spawnSync = require('child_process').spawnSync;
+const debug = require('debug')('gyp.js');
 
 const rootDir = path.join(__dirname, '..');
 const gyp = path.join(rootDir, 'bin', 'gyp');
@@ -35,9 +36,11 @@ function build(name) {
     if (process.env.running_under_istanbul)
       argv = istanbulArgs.concat(argv);
 
+    debug({execPath: process.execPath, argv, spawnOpts});
     let p = spawnSync(process.execPath, argv, spawnOpts);
     if (p.status !== 0 && p.stdout)
       console.error(p.stdout.toString());
+    debug(p.stdout.toString());
     if (p.error)
       throw p.error;
     assert.equal(p.status, 0, `cd ${name} && gyp failed`);
