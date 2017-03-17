@@ -24,7 +24,7 @@ lint:
 format:
 	@$(BINDIR)/eslint --fix $(SRC_FILES)
 
-check:
+check: build
 	@$(BINDIR)/mocha --reporter=spec test/*-test.js --compilers js:babel-register
 
 coverage:
