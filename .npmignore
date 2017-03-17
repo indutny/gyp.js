@@ -1,0 +1,7 @@
+bench/
+node_modules/
+npm-debug.log
+out/
+coverage/
+src/
+test/
