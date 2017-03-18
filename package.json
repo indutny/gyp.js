@@ -53,5 +53,12 @@
         }
       ]
     ]
+  },
+  "browser": {
+    "fs": false,
+    "child_process": false,
+    "windows-autoconf": false,
+    "ninja.js": false,
+    "./lib/gyp/bindings.js": "./lib/gyp/abstract-bindings.js"
   }
 }
