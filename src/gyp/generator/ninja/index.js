@@ -185,7 +185,10 @@ Ninja.prototype.type = function type() {
 };
 
 Ninja.prototype.uniqueOutPath = function uniqueOutPath(out) {
-  return common.path.join(this.objDir, out);
+  let obj = 'obj';
+  if (this.toolset !== 'target')
+    obj += '.' + this.toolset;
+  return common.path.join(obj, this.intPostfix, out);
 };
 
 Ninja.prototype.output = function output() {
