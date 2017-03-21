@@ -184,13 +184,6 @@ Ninja.prototype.type = function type() {
   return this.targetDict.type;
 };
 
-Ninja.prototype.uniqueOutPath = function uniqueOutPath(out) {
-  let obj = 'obj';
-  if (this.toolset !== 'target')
-    obj += '.' + this.toolset;
-  return common.path.join(obj, this.intPostfix, out);
-};
-
 Ninja.prototype.output = function output() {
   let res = [];
 
@@ -232,17 +225,6 @@ Ninja.prototype.output = function output() {
     out = out.slice(3);
 
   out = prefix + out;
-
-  // This is really stupid, but GYP does it and we aim to be compatible with
-  // it to be able to build node
-  const productDirTypes = [ 'executable', 'loadable_module' ];
-  if (this.flavor === 'darwin' && this.toolset === 'target')
-    productDirTypes.push('shared_library', 'static_library');
-  else if (this.flavor === 'win32' && this.toolset === 'target')
-    productDirTypes.push('shared_library');
-
-  if (productDirTypes.indexOf(type) === -1)
-    out = this.uniqueOutPath(out);
 
   if (type !== 'none')
     res.push(out);
