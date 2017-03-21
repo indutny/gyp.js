@@ -404,6 +404,7 @@ Ninja.prototype.actions = function actions() {
     const actionRule = safeName + (counterRef.cnt || '');
     counterRef.cnt++;
 
+    // NOTE: add `/.` to fix relative path to the project's root
     const base = gyp.common.cachedRelative(
         this.configDir,
         this.srcDir + gyp.bindings.path.sep + '.');
