@@ -404,8 +404,10 @@ Ninja.prototype.actions = function actions() {
     const actionRule = safeName + (counterRef.cnt || '');
     counterRef.cnt++;
 
-    const base = gyp.common.cachedRelative(this.configDir, this.srcDir + '.');
-    const toBase = gyp.common.cachedRelative(this.srcDir, this.configDir + '.');
+    const base = gyp.common.cachedRelative(this.configDir,
+                                           this.srcDir + '/.');
+    const toBase = gyp.common.cachedRelative(this.srcDir,
+                                             this.configDir + '/.');
 
     this.n.rule(actionRule, {
       description: action.message,
