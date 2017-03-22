@@ -83,6 +83,9 @@ function load(options, extra) {
   defaultVariables['GENERATOR'] = format;
   defaultVariables['GENERATOR_FLAVOR'] = params['flavor'] || '';
 
+  defaultVariables['GYP_ENGINE'] = 'gyp.js';
+  defaultVariables['GYP_ENGINE_VERSION'] = require('../package.json').version;
+
   /* Format can be a custom JS file, or by default the name of a module
    * within gyp.generator.
    */
